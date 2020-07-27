@@ -48,12 +48,20 @@ resource "aws_security_group" "SG-web" {
   vpc_id = aws_vpc.patrick_vpc.id 
 
   ingress {
-    description = "https from VPC"
+    description = "3000 from VPC"
     from_port   = 3000
     to_port     = 3000
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  ingress {
+    description = "https from VPC"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }  
 
   ingress {
     description = "http from VPC"
@@ -62,6 +70,7 @@ resource "aws_security_group" "SG-web" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -145,10 +154,6 @@ resource "aws_route_table_association" "route-app" {
   route_table_id = aws_route_table.route-public.id
 }
 
-# Load init script to be used
-data "template_file" "initapp" {
-  template = file("./scripts/app/init.sh.tpl")
-}
 
 # Create EC2 instance IMAGE with APP
 resource "aws_instance" "Web" {
@@ -278,7 +283,7 @@ resource "aws_instance" "DB" {
   subnet_id                   = aws_subnet.Private-sub.id
   vpc_security_group_ids      = [aws_security_group.SG-db.id]
   associate_public_ip_address = true
-  user_data = data.template_file.initapp.rendered
+  user_data = data.template_file.initdb.rendered
   tags = {
     Name = "${var.name}TF.db"
   }
@@ -308,4 +313,17 @@ resource "aws_route_table" "route-private" {
 resource "aws_route_table_association" "route-db" {
   subnet_id = aws_subnet.Private-sub.id
   route_table_id = aws_route_table.route-private.id
+}
+
+# Load init script to be used
+data "template_file" "initapp" {
+  template = file("./scripts/app/init.sh.tpl")
+  vars = {
+      db_host = "mongodb://${aws_instance.DB.private_ip}:27017/posts"
+    }  
+}
+
+# Load init script to be used
+data "template_file" "initdb" {
+  template = file("./scripts/db/init.sh.tpl")
 }
