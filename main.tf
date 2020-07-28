@@ -155,9 +155,9 @@ resource "aws_route_table_association" "route-app" {
 }
 
 
-# Create EC2 instance IMAGE with APP
+# Create EC2 instance IMAGE with APP ami-00b48f09c568b0014
 resource "aws_instance" "Web" {
-  ami                         = "ami-00b48f09c568b0014"
+  ami                         = "ami-0f0760889c55970e5"
   instance_type               = "t2.micro"
   subnet_id                   = aws_subnet.Public-sub.id
   vpc_security_group_ids      = [aws_security_group.SG-web.id]

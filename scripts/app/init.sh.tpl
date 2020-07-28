@@ -1,8 +1,9 @@
 #!/bin/bash
 
-cd /home/ubuntu/web-app
+sudo systemctl restart nginx
+cd /home/ubuntu/app
 export DB_HOST=${db_host}
 . ~/.bashrc
 node seeds/seed.js
-npm install
-pm2 start app.js
+forever stopall
+forever start app.js
