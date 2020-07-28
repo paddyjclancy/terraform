@@ -65,7 +65,7 @@
 5) Export db_host, seed the database, install npm, start pm2
 6) Go to public IP of instance to ensure app / AMI is working
 7) Go back to main.tf, and create private (db) components
-8) Use AMI or if starting from scratch:
+8) Use AMI, or if starting from scratch:
 	- Reference to an init.sh.tpl
 	- Use provision.sh script here
 9) Use `terraform apply` to check and confirm
