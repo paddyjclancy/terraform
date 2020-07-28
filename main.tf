@@ -278,14 +278,14 @@ resource "aws_network_acl" "private-nacl" {
 
 # Create EC2 instance for DB
 resource "aws_instance" "DB" {
-  ami                         = "ami-089cc16f7f08c4457"
+  ami                         = "ami-0983c603572871a58"
   instance_type               = "t2.micro"
   subnet_id                   = aws_subnet.Private-sub.id
   vpc_security_group_ids      = [aws_security_group.SG-db.id]
   associate_public_ip_address = true
-  user_data = data.template_file.initdb.rendered
+  # user_data = data.template_file.initdb.rendered
   tags = {
-    Name = "${var.name}TF.db"
+    Name = "${var.name}TF.DB"
   }
   
 }
@@ -324,6 +324,6 @@ data "template_file" "initapp" {
 }
 
 # Load init script to be used
-data "template_file" "initdb" {
-  template = file("./scripts/db/init.sh.tpl")
-}
+# data "template_file" "initdb" {
+#   template = file("./scripts/db/init.sh.tpl")
+# }
