@@ -46,3 +46,27 @@
 - `terraform plan`
 - `terraform apply`
 - `terraform destroy`
+
+
+### Set up
+
+- Terraform download a prerequisite
+
+1) Set up repo - .gitignore, scripts/, app/, db/, main.tf
+2) `terraform init`
+3) Write main.tf to create VPC and public components
+	- See example file in this repo, and documentation
+	- https://www.terraform.io/docs/index.html
+	- Include prebuilt AMIs where possible
+		- App instance
+3) Use `terraform plan` and `terraform apply` to validate and create
+4) Reference init.sh.tpl in data section of main.tf
+	- This is a bash script that will run for the app instance
+5) Export db_host, seed the database, install npm, start pm2
+6) Go to public IP of instance to ensure app / AMI is working
+7) Go back to main.tf, and create private (db) components
+8) Use AMI or if starting from scratch:
+	- Reference to an init.sh.tpl
+	- Use provision.sh script here
+9) Use `terraform apply` to check and confirm
+10) Go to public IP of web instance (changes each apply) and check for /posts
